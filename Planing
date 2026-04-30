@@ -1,0 +1,20 @@
+Nazekei: she will do design for this project. Everything about design like diagrams, documents and type of strategy and display design.
+
+Nurshat: Game logic. He decide what add where add and give tasks for others.
+
+Adilet: He will worker like he will write codes.
+
+1. Step
+  1. Design
+
+  2. Main.java
+     GameEngine.java
+     Base.java
+     Player.java
+
+  3. Enemy.java
+     Tower.java
+     EnemyFactory.java
+     WaveManager.java
+
+2. Step
