@@ -59,6 +59,6 @@ com.game.towerdefense
 │   ├── WaveManager.java
 │   ├── MergeManager.java
 
-├── ui/
+├── ui/.
 │   ├── HUD.java
 │   ├── TowerMenu.java
