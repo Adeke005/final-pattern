@@ -1,14 +1,10 @@
 1. Game Description
 
-Last Tower Defense is a 2D tower defense game where the player protects a base from waves of enemies.
-Enemies spawn on one side of the map and follow a predefined path toward the base.
-The player must place defensive towers on specific spots to destroy enemies before they reach the end.
+Last Tower Defense is a 2D tower defense game where the player protects a base from waves of enemies. Enemies spawn on one side of the map and follow a predefined path toward the base. The player must place defensive towers on specific spots to destroy enemies before they reach the end.
 
-The main goal is to survive all waves while keeping the base alive.
-If too many enemies reach the base and its health drops to zero, the player loses.
+The main goal is to survive all waves while keeping the base alive. If too many enemies reach the base and its health drops to zero, the player loses.
 
-The game runs in a desktop window. On the screen,
-the player sees the map, enemy path, base, towers, enemies, gold amount, base HP, and current wave number.
+The game runs in a desktop window. On the screen, the player sees the map, enemy path, base, towers, enemies, gold amount, base HP, and current wave number.
 
 2. Controls
 
