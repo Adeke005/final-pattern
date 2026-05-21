@@ -14,6 +14,7 @@ import com.game.towerdefense.map.Level;
 import com.game.towerdefense.map.MapRenderer;
 import com.game.towerdefense.ui.HUD;
 import com.game.towerdefense.GameApp;
+import com.game.towerdefense.screens.PauseScreen;
 
 public class GameScreen implements Screen {
     private Level level;
@@ -96,6 +97,10 @@ public class GameScreen implements Screen {
 
             if (spot != null) {
                 towerManager.placeTower(selectedTowerType, spot.x, spot.y, base);
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                game.setScreen(new PauseScreen(game, this));
             }
         }
     }
