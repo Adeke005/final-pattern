@@ -1,11 +1,8 @@
 package com.game.towerdefense.managers;
 
-import com.badlogic.gdx.math.Vector2;
 import com.game.towerdefense.entities.Enemy;
 import com.game.towerdefense.entities.Tower;
-import com.game.towerdefense.towers.ArrowTower;
-import com.game.towerdefense.towers.CannonTower;
-import com.game.towerdefense.towers.IceTower;
+import com.game.towerdefense.factory.TowerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +17,7 @@ public class TowerManager {
     }
 
     public boolean placeTower(String type, float x, float y, PlayerBase base) {
-        Tower tower;
-
-        switch (type) {
-            case "ARROW":
-                tower = new ArrowTower(x, y);
-                break;
-            case "CANNON":
-                tower = new CannonTower(x, y);
-                break;
-            case "ICE":
-                tower = new IceTower(x, y);
-                break;
-            default:
-                return false;
-        }
+        Tower tower = TowerFactory.createTower(type, x, y);
 
         if (!base.spendGold(tower.getCost())) {
             return false;
