@@ -77,6 +77,26 @@ public class TowerManager {
         secondSelectedTower = null;
     }
 
+    public boolean removeTowerAt(float x, float y) {
+        Tower tower = findTowerAt(x, y);
+
+        if (tower == null) {
+            return false;
+        }
+
+        towers.remove(tower);
+
+        if (tower == firstSelectedTower) {
+            firstSelectedTower = null;
+        }
+
+        if (tower == secondSelectedTower) {
+            secondSelectedTower = null;
+        }
+
+        return true;
+    }
+
     public List<Tower> getTowers() {
         return towers;
     }

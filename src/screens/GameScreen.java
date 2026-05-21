@@ -102,6 +102,13 @@ public class GameScreen implements Screen {
             towerManager.tryMergeSelectedTowers();
         }
 
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+            float x = Gdx.input.getX();
+            float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            towerManager.removeTowerAt(x, y);
+        }
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             float x = Gdx.input.getX();
             float y = Gdx.graphics.getHeight() - Gdx.input.getY();
