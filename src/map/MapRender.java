@@ -35,6 +35,18 @@ public class MapRenderer {
         shapeRenderer.setColor(1f, 0f, 0f, 1);
         shapeRenderer.rect(base.x - 25, base.y - 25, 50, 50);
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            selectedTowerType = "ARROW";
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            selectedTowerType = "CANNON";
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            selectedTowerType = "ICE";
+        }
+
         shapeRenderer.end();
     }
 

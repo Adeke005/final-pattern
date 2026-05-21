@@ -21,6 +21,8 @@ public class GameScreen implements Screen {
 
     private float spawnTimer = 0f;
 
+    private String selectedTowerType = "ARROW";
+
     @Override
     public void show() {
         level = new Level();
@@ -51,7 +53,7 @@ public class GameScreen implements Screen {
             Vector2 spot = level.getNearestTowerSpot(x, y);
 
             if (spot != null) {
-                towerManager.placeTower("ARROW", spot.x, spot.y, base);
+                towerManager.placeTower(selectedTowerType, spot.x, spot.y, base);
             }
         }
 
