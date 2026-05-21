@@ -1,15 +1,18 @@
-mappackage com.game.towerdefense.screens;
+package com.game.towerdefense.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.game.towerdefense.enemies.BasicEnemy;
 import com.game.towerdefense.managers.EnemyManager;
 import com.game.towerdefense.managers.PlayerBase;
 import com.game.towerdefense.managers.TowerManager;
+import com.game.towerdefense.managers.WaveManager;
 import com.game.towerdefense.map.Level;
 import com.game.towerdefense.map.MapRenderer;
+import com.game.towerdefense.ui.HUD;
 
 public class GameScreen implements Screen {
     private Level level;
@@ -17,9 +20,11 @@ public class GameScreen implements Screen {
 
     private EnemyManager enemyManager;
     private TowerManager towerManager;
+    private WaveManager waveManager;
     private PlayerBase base;
 
-    private float spawnTimer = 0f;
+    private HUD hud;
+    private SpriteBatch batch;
 
     private String selectedTowerType = "ARROW";
 
@@ -30,21 +35,52 @@ public class GameScreen implements Screen {
 
         enemyManager = new EnemyManager();
         towerManager = new TowerManager();
+        waveManager = new WaveManager();
+
         base = new PlayerBase();
+
+        hud = new HUD();
+        batch = new SpriteBatch();
     }
 
     @Override
     public void render(float delta) {
-        spawnTimer += delta;
+        handleInput();
 
-        if (spawnTimer > 2f) {
-            Vector2 spawn = level.getPath().getSpawnPoint();
-            enemyManager.addEnemy(new BasicEnemy(spawn.x, spawn.y));
-            spawnTimer = 0f;
-        }
+        waveManager.update(delta, enemyManager, level.getPath().getSpawnPoint());
 
         enemyManager.update(delta, level.getPath().getPoints(), base);
         towerManager.update(delta, enemyManager.getEnemies());
+
+        mapRenderer.render(level);
+
+        hud.render(batch, base, waveManager, selectedTowerType);
+
+        if (base.isDestroyed()) {
+            System.out.println("GAME OVER");
+        }
+
+        if (waveManager.isGameCompleted()) {
+            System.out.println("YOU WIN");
+        }
+
+        if (waveManager.isWaveFinished() && !waveManager.isGameCompleted()) {
+            waveManager.startNextWave();
+        }
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            selectedTowerType = "ARROW";
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            selectedTowerType = "CANNON";
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            selectedTowerType = "ICE";
+        }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             float x = Gdx.input.getX();
@@ -56,12 +92,6 @@ public class GameScreen implements Screen {
                 towerManager.placeTower(selectedTowerType, spot.x, spot.y, base);
             }
         }
-
-        mapRenderer.render(level);
-
-        if (base.isDestroyed()) {
-            System.out.println("GAME OVER");
-        }
     }
 
     @Override public void resize(int width, int height) {}
@@ -72,5 +102,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         mapRenderer.dispose();
+        hud.dispose();
+        batch.dispose();
     }
 }
