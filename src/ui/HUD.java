@@ -20,7 +20,7 @@ public class HUD {
         font.draw(batch, "Wave: " + waveManager.getCurrentWave(), 240, 460);
         font.draw(batch, "Selected Tower: " + selectedTower, 360, 460);
 
-        font.draw(batch, "Press 1: Arrow | 2: Cannon | 3: Ice | M: Merge | RMB: Remove", 20, 30);
+        font.draw(batch, "1: Arrow | 2: Cannon | 3: Ice | U: Upgrade | M: Merge | RMB: Remove", 20, 30);
 
         if (message != null && message.isVisible()) {
             font.draw(batch, message.getText(), 300, 430);

@@ -77,6 +77,23 @@ public class TowerManager {
         return false;
     }
 
+    public boolean upgradeSelectedTower(PlayerBase base) {
+        if (firstSelectedTower == null) {
+            return false;
+        }
+
+        if (!firstSelectedTower.canUpgrade()) {
+            return false;
+        }
+
+        if (!base.spendGold(firstSelectedTower.getUpgradeCost())) {
+            return false;
+        }
+
+        firstSelectedTower.upgrade();
+        return true;
+    }
+
     public boolean removeTowerAt(float x, float y) {
         Tower tower = findTowerAt(x, y);
 

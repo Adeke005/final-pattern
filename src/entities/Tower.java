@@ -13,6 +13,9 @@ public abstract class Tower {
     protected float timer = 0f;
     protected int cost;
     protected String type;
+    protected int level = 1;
+    protected int maxLevel = 3;
+    protected int upgradeCost = 70;
 
     protected AttackStrategy attackStrategy;
 
@@ -44,6 +47,28 @@ public abstract class Tower {
             }
         }
         return null;
+    }
+
+    public boolean canUpgrade() {
+        return level < maxLevel;
+    }
+
+    public void upgrade() {
+        if (!canUpgrade()) return;
+
+        level++;
+        damage += 10;
+        range += 20f;
+        cooldown *= 0.85f;
+        upgradeCost += 50;
+    }
+
+    public int getUpgradeCost() {
+        return upgradeCost;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     protected void attack(Enemy enemy) {

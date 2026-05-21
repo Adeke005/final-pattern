@@ -115,6 +115,16 @@ public class GameScreen implements Screen {
             }
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            boolean upgraded = towerManager.upgradeSelectedTower(base);
+
+            if (upgraded) {
+                gameMessage.show("Tower upgraded");
+            } else {
+                gameMessage.show("Cannot upgrade tower");
+            }
+        }
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             float x = Gdx.input.getX();
             float y = Gdx.graphics.getHeight() - Gdx.input.getY();
