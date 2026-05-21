@@ -2,6 +2,7 @@ package com.game.towerdefense.entities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.game.towerdefense.strategy.AttackStrategy;
+import com.game.towerdefense.managers.BulletManager;
 
 import java.util.List;
 
@@ -29,13 +30,13 @@ public abstract class Tower {
         this.attackStrategy = attackStrategy;
     }
 
-    public void update(float delta, List<Enemy> enemies) {
+    public void update(float delta, List<Enemy> enemies, BulletManager bulletManager) {
         timer += delta;
 
         Enemy target = findTarget(enemies);
 
         if (target != null && timer >= cooldown) {
-            attack(target);
+            attack(target, bulletManager);
             timer = 0f;
         }
     }
@@ -71,8 +72,8 @@ public abstract class Tower {
         return level;
     }
 
-    protected void attack(Enemy enemy) {
-        attackStrategy.attack(enemy, damage);
+    protected void attack(Enemy enemy, BulletManager bulletManager) {
+        bulletManager.addBullet(position.x, position.y, enemy, damage);
     }
 
     public boolean isNear(Tower other) {

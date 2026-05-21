@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.game.towerdefense.entities.Enemy;
 import com.game.towerdefense.entities.Tower;
+import com.game.towerdefense.entities.Bullet;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class MapRenderer {
         shapeRenderer = new ShapeRenderer();
     }
 
-    public void render(Level level, List<Enemy> enemies, List<Tower> towers, Tower selectedTower) {
+    public void render(Level level, List<Enemy> enemies, List<Tower> towers, List<Bullet> bullets, Tower selectedTower){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         // background
@@ -56,6 +57,16 @@ public class MapRenderer {
         // towers
         for (Tower tower : towers) {
             drawTower(tower);
+        }
+
+        // bullets
+        for (Bullet bullet : bullets) {
+            shapeRenderer.setColor(1f, 1f, 0f, 1);
+            shapeRenderer.circle(
+                    bullet.getPosition().x,
+                    bullet.getPosition().y,
+                    5
+            );
         }
 
         if (selectedTower != null) {

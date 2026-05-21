@@ -6,6 +6,7 @@ import com.game.towerdefense.factory.TowerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.game.towerdefense.managers.BulletManager;
 
 public class TowerManager {
     private List<Tower> towers = new ArrayList<>();
@@ -14,12 +15,11 @@ public class TowerManager {
 
     private MergeManager mergeManager = new MergeManager();
 
-    public void update(float delta, List<Enemy> enemies) {
+    public void update(float delta, List<Enemy> enemies, BulletManager bulletManager) {
         for (Tower tower : towers) {
-            tower.update(delta, enemies);
+            tower.update(delta, enemies, bulletManager);
         }
     }
-
     public boolean placeTower(String type, float x, float y, PlayerBase base) {
         if (isSpotOccupied(x, y)) {
             return false;

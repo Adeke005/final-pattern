@@ -21,6 +21,8 @@ import com.game.towerdefense.state.GameState;
 import com.game.towerdefense.state.PlayingState;
 import com.game.towerdefense.state.GameOverState;
 import com.game.towerdefense.state.WinState;
+import com.game.towerdefense.managers.BulletManager;
+
 
 public class GameScreen implements Screen {
     private GameApp game;
@@ -31,7 +33,9 @@ public class GameScreen implements Screen {
     private EnemyManager enemyManager;
     private TowerManager towerManager;
     private WaveManager waveManager;
+    private BulletManager bulletManager;
     private PlayerBase base;
+
 
     private HUD hud;
     private SpriteBatch batch;
@@ -39,6 +43,7 @@ public class GameScreen implements Screen {
     private EventManager eventManager;
     private GameState currentState;
     private int currentLevel = 1;
+
 
     private String selectedTowerType = "ARROW";
 
@@ -60,6 +65,7 @@ public class GameScreen implements Screen {
         enemyManager = new EnemyManager(eventManager);
         towerManager = new TowerManager();
         waveManager = new WaveManager();
+        bulletManager = new BulletManager();
 
         currentState = new PlayingState();
 
@@ -79,6 +85,7 @@ public class GameScreen implements Screen {
                 level,
                 enemyManager.getEnemies(),
                 towerManager.getTowers(),
+                bulletManager.getBullets(),
                 towerManager.getFirstSelectedTower()
         );
 
@@ -189,7 +196,8 @@ public class GameScreen implements Screen {
         waveManager.update(delta, enemyManager, level.getPath().getSpawnPoint());
 
         enemyManager.update(delta, level.getPath().getPoints(), base);
-        towerManager.update(delta, enemyManager.getEnemies());
+        towerManager.update(delta, enemyManager.getEnemies(), bulletManager);
+        bulletManager.update(delta);
 
         if (base.isDestroyed()) {
             currentState = new GameOverState();
