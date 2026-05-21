@@ -12,10 +12,12 @@ public abstract class Tower {
     protected float cooldown;
     protected float timer = 0f;
     protected int cost;
+    protected String type;
 
     protected AttackStrategy attackStrategy;
 
-    public Tower(float x, float y, int damage, float range, float cooldown, int cost, AttackStrategy attackStrategy) {
+    public Tower(String type, float x, float y, int damage, float range, float cooldown, int cost, AttackStrategy attackStrategy) {
+        this.type = type;
         this.position = new Vector2(x, y);
         this.damage = damage;
         this.range = range;
@@ -48,6 +50,10 @@ public abstract class Tower {
         attackStrategy.attack(enemy, damage);
     }
 
+    public boolean isNear(Tower other) {
+        return position.dst(other.getPosition()) <= 80f;
+    }
+
     public Vector2 getPosition() {
         return position;
     }
@@ -58,5 +64,9 @@ public abstract class Tower {
 
     public float getRange() {
         return range;
+    }
+
+    public String getType() {
+        return type;
     }
 }

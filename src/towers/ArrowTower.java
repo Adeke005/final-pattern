@@ -5,6 +5,6 @@ import com.game.towerdefense.strategy.FastAttack;
 
 public class ArrowTower extends Tower {
     public ArrowTower(float x, float y) {
-        super(x, y, 15, 130f, 0.7f, 50, new FastAttack());
+        super("ARROW", x, y, 15, 130f, 0.7f, 50, new FastAttack());
     }
 }
