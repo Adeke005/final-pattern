@@ -2,6 +2,10 @@ package com.game.towerdefense.map;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.game.towerdefense.entities.Enemy;
+import com.game.towerdefense.entities.Tower;
+
+import java.util.List;
 
 public class MapRenderer {
     private ShapeRenderer shapeRenderer;
@@ -10,17 +14,25 @@ public class MapRenderer {
         shapeRenderer = new ShapeRenderer();
     }
 
-    public void render(Level level) {
+    public void render(Level level, List<Enemy> enemies, List<Tower> towers) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
+        // background
+        shapeRenderer.setColor(0.12f, 0.45f, 0.18f, 1);
+        shapeRenderer.rect(0, 0, 800, 480);
+
         // path
-        shapeRenderer.setColor(0.5f, 0.35f, 0.2f, 1);
-        for (Vector2 point : level.getPath().getPoints()) {
-            shapeRenderer.circle(point.x, point.y, 18);
+        shapeRenderer.setColor(0.55f, 0.38f, 0.2f, 1);
+        List<Vector2> points = level.getPath().getPoints();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            Vector2 start = points.get(i);
+            Vector2 end = points.get(i + 1);
+            drawThickLine(start, end, 36);
         }
 
         // tower spots
-        shapeRenderer.setColor(0.2f, 0.7f, 0.2f, 1);
+        shapeRenderer.setColor(0.2f, 0.75f, 0.2f, 1);
         for (Vector2 spot : level.getTowerSpots()) {
             shapeRenderer.circle(spot.x, spot.y, 22);
         }
@@ -35,19 +47,57 @@ public class MapRenderer {
         shapeRenderer.setColor(1f, 0f, 0f, 1);
         shapeRenderer.rect(base.x - 25, base.y - 25, 50, 50);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            selectedTowerType = "ARROW";
+        // enemies
+        for (Enemy enemy : enemies) {
+            shapeRenderer.setColor(0.8f, 0.1f, 0.1f, 1);
+            shapeRenderer.circle(enemy.getPosition().x, enemy.getPosition().y, 14);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            selectedTowerType = "CANNON";
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            selectedTowerType = "ICE";
+        // towers
+        for (Tower tower : towers) {
+            drawTower(tower);
         }
 
         shapeRenderer.end();
+    }
+
+    private void drawTower(Tower tower) {
+        String type = tower.getType();
+
+        if (type.equals("ARROW")) {
+            shapeRenderer.setColor(0.1f, 0.1f, 0.9f, 1);
+        } else if (type.equals("CANNON")) {
+            shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 1);
+        } else if (type.equals("ICE")) {
+            shapeRenderer.setColor(0.1f, 0.8f, 1f, 1);
+        } else if (type.equals("SNIPER")) {
+            shapeRenderer.setColor(0.6f, 0.1f, 0.9f, 1);
+        } else if (type.equals("MEGA_CANNON")) {
+            shapeRenderer.setColor(0f, 0f, 0f, 1);
+        } else if (type.equals("FREEZE_AURA")) {
+            shapeRenderer.setColor(0.7f, 0.95f, 1f, 1);
+        } else {
+            shapeRenderer.setColor(1f, 1f, 1f, 1);
+        }
+
+        shapeRenderer.rect(
+                tower.getPosition().x - 15,
+                tower.getPosition().y - 15,
+                30,
+                30
+        );
+    }
+
+    private void drawThickLine(Vector2 start, Vector2 end, float thickness) {
+        if (start.x == end.x) {
+            float y = Math.min(start.y, end.y);
+            float height = Math.abs(start.y - end.y);
+            shapeRenderer.rect(start.x - thickness / 2f, y, thickness, height);
+        } else if (start.y == end.y) {
+            float x = Math.min(start.x, end.x);
+            float width = Math.abs(start.x - end.x);
+            shapeRenderer.rect(x, start.y - thickness / 2f, width, thickness);
+        }
     }
 
     public void dispose() {
