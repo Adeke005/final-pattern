@@ -1,6 +1,8 @@
 package com.game.towerdefense.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.game.towerdefense.strategy.AttackStrategy;
+
 import java.util.List;
 
 public abstract class Tower {
@@ -11,12 +13,15 @@ public abstract class Tower {
     protected float timer = 0f;
     protected int cost;
 
-    public Tower(float x, float y, int damage, float range, float cooldown, int cost) {
+    protected AttackStrategy attackStrategy;
+
+    public Tower(float x, float y, int damage, float range, float cooldown, int cost, AttackStrategy attackStrategy) {
         this.position = new Vector2(x, y);
         this.damage = damage;
         this.range = range;
         this.cooldown = cooldown;
         this.cost = cost;
+        this.attackStrategy = attackStrategy;
     }
 
     public void update(float delta, List<Enemy> enemies) {
@@ -40,7 +45,7 @@ public abstract class Tower {
     }
 
     protected void attack(Enemy enemy) {
-        enemy.takeDamage(damage);
+        attackStrategy.attack(enemy, damage);
     }
 
     public Vector2 getPosition() {
