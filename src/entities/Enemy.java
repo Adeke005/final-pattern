@@ -45,6 +45,10 @@ public abstract class Enemy {
         if (hp < 0) hp = 0;
     }
 
+    public void slowDown() {
+        speed *= 0.7f;
+    }
+
     public boolean isDead() {
         return hp <= 0;
     }
