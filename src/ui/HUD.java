@@ -12,7 +12,7 @@ public class HUD {
         font = new BitmapFont();
     }
 
-    public void render(SpriteBatch batch, PlayerBase base, WaveManager waveManager, String selectedTower) {
+    public void render(SpriteBatch batch, PlayerBase base, WaveManager waveManager, String selectedTower, GameMessage message) {
         batch.begin();
 
         font.draw(batch, "HP: " + base.getHp(), 20, 460);
@@ -20,7 +20,11 @@ public class HUD {
         font.draw(batch, "Wave: " + waveManager.getCurrentWave(), 240, 460);
         font.draw(batch, "Selected Tower: " + selectedTower, 360, 460);
 
-        font.draw(batch, "Press 1: Arrow | 2: Cannon | 3: Ice", 20, 30);
+        font.draw(batch, "Press 1: Arrow | 2: Cannon | 3: Ice | M: Merge | RMB: Remove", 20, 30);
+
+        if (message != null && message.isVisible()) {
+            font.draw(batch, message.getText(), 300, 430);
+        }
 
         batch.end();
     }

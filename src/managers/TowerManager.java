@@ -60,21 +60,21 @@ public class TowerManager {
         }
     }
 
-    public void tryMergeSelectedTowers() {
+    public boolean tryMergeSelectedTowers() {
         if (firstSelectedTower == null || secondSelectedTower == null) {
-            System.out.println("Select two towers first");
-            return;
+            return false;
         }
 
         if (mergeManager.canMerge(firstSelectedTower, secondSelectedTower)) {
             mergeManager.mergeAndReplace(towers, firstSelectedTower, secondSelectedTower);
-            System.out.println("Towers merged");
-        } else {
-            System.out.println("Cannot merge these towers");
+            firstSelectedTower = null;
+            secondSelectedTower = null;
+            return true;
         }
 
         firstSelectedTower = null;
         secondSelectedTower = null;
+        return false;
     }
 
     public boolean removeTowerAt(float x, float y) {

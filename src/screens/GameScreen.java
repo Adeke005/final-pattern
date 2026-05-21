@@ -15,6 +15,7 @@ import com.game.towerdefense.managers.WaveManager;
 import com.game.towerdefense.map.Level;
 import com.game.towerdefense.map.MapRenderer;
 import com.game.towerdefense.ui.HUD;
+import com.game.towerdefense.ui.GameMessage;
 
 public class GameScreen implements Screen {
     private GameApp game;
@@ -29,6 +30,7 @@ public class GameScreen implements Screen {
 
     private HUD hud;
     private SpriteBatch batch;
+    private GameMessage gameMessage;
 
     private String selectedTowerType = "ARROW";
 
@@ -44,6 +46,8 @@ public class GameScreen implements Screen {
         enemyManager = new EnemyManager();
         towerManager = new TowerManager();
         waveManager = new WaveManager();
+
+        gameMessage = new GameMessage();
 
         base = new PlayerBase();
 
@@ -66,7 +70,10 @@ public class GameScreen implements Screen {
                 towerManager.getTowers(),
                 towerManager.getFirstSelectedTower()
         );
-        hud.render(batch, base, waveManager, selectedTowerType);
+
+        gameMessage.update(delta);
+
+        hud.render(batch, base, waveManager, selectedTowerType, gameMessage);
 
         if (base.isDestroyed()) {
             game.setScreen(new GameOverScreen(game));
@@ -99,14 +106,24 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            towerManager.tryMergeSelectedTowers();
+            boolean merged = towerManager.tryMergeSelectedTowers();
+
+            if (merged) {
+                gameMessage.show("Towers merged");
+            } else {
+                gameMessage.show("Cannot merge towers");
+            }
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             float x = Gdx.input.getX();
             float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-            towerManager.removeTowerAt(x, y);
+            boolean removed = towerManager.removeTowerAt(x, y);
+
+            if (removed) {
+                gameMessage.show("Tower removed");
+            }
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -123,9 +140,16 @@ public class GameScreen implements Screen {
             Vector2 spot = level.getNearestTowerSpot(x, y);
 
             if (spot != null) {
-                towerManager.placeTower(selectedTowerType, spot.x, spot.y, base);
+                boolean placed = towerManager.placeTower(selectedTowerType, spot.x, spot.y, base);
+
+                if (placed) {
+                    gameMessage.show("Tower placed");
+                } else {
+                    gameMessage.show("Not enough gold");
+                }
             }
         }
+
     }
 
     @Override public void resize(int width, int height) {}
