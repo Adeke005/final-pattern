@@ -2,11 +2,14 @@ package com.game.towerdefense.ui;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.game.towerdefense.entities.Enemy;
 import com.game.towerdefense.managers.PlayerBase;
 import com.game.towerdefense.managers.WaveManager;
+import com.game.towerdefense.observer.GameObserver;
 
-public class HUD {
+public class HUD implements GameObserver {
     private BitmapFont font;
+    private String eventText = "";
 
     public HUD() {
         font = new BitmapFont();
@@ -26,7 +29,26 @@ public class HUD {
             font.draw(batch, message.getText(), 300, 430);
         }
 
+        if (!eventText.isEmpty()) {
+            font.draw(batch, eventText, 300, 405);
+        }
+
         batch.end();
+    }
+
+    @Override
+    public void onEnemyKilled(Enemy enemy) {
+        eventText = "Enemy killed! +" + enemy.getRewardGold() + " gold";
+    }
+
+    @Override
+    public void onBaseDamaged(int damage) {
+        eventText = "Base damaged! -" + damage + " HP";
+    }
+
+    @Override
+    public void onWaveCompleted(int waveNumber) {
+        eventText = "Wave " + waveNumber + " completed!";
     }
 
     public void dispose() {

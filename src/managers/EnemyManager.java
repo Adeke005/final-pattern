@@ -1,6 +1,7 @@
 package com.game.towerdefense.managers;
 
 import com.game.towerdefense.entities.Enemy;
+import com.game.towerdefense.observer.EventManager;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +9,11 @@ import java.util.List;
 
 public class EnemyManager {
     private List<Enemy> enemies = new ArrayList<>();
+    private EventManager eventManager;
+
+    public EnemyManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
     public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
@@ -22,11 +28,13 @@ public class EnemyManager {
 
             if (enemy.hasReachedBase()) {
                 base.takeDamage(enemy.getDamageToBase());
+                eventManager.notifyBaseDamaged(enemy.getDamageToBase());
                 iterator.remove();
             }
 
             if (enemy.isDead()) {
                 base.addGold(enemy.getRewardGold());
+                eventManager.notifyEnemyKilled(enemy);
                 iterator.remove();
             }
         }

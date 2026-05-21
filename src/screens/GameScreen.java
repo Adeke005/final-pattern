@@ -16,6 +16,7 @@ import com.game.towerdefense.map.Level;
 import com.game.towerdefense.map.MapRenderer;
 import com.game.towerdefense.ui.HUD;
 import com.game.towerdefense.ui.GameMessage;
+import com.game.towerdefense.observer.EventManager;
 
 public class GameScreen implements Screen {
     private GameApp game;
@@ -31,6 +32,7 @@ public class GameScreen implements Screen {
     private HUD hud;
     private SpriteBatch batch;
     private GameMessage gameMessage;
+    private EventManager eventManager;
 
     private String selectedTowerType = "ARROW";
 
@@ -39,20 +41,24 @@ public class GameScreen implements Screen {
     }
 
     @Override
+    @Override
     public void show() {
         level = new Level();
         mapRenderer = new MapRenderer();
 
-        enemyManager = new EnemyManager();
+        eventManager = new EventManager();
+
+        hud = new HUD();
+        eventManager.addObserver(hud);
+
+        enemyManager = new EnemyManager(eventManager);
         towerManager = new TowerManager();
         waveManager = new WaveManager();
 
-        gameMessage = new GameMessage();
-
         base = new PlayerBase();
 
-        hud = new HUD();
         batch = new SpriteBatch();
+        gameMessage = new GameMessage();
     }
 
     @Override
@@ -84,6 +90,7 @@ public class GameScreen implements Screen {
         }
 
         if (waveManager.isWaveFinished() && !waveManager.isGameCompleted()) {
+            eventManager.notifyWaveCompleted(waveManager.getCurrentWave());
             waveManager.startNextWave();
         }
     }
