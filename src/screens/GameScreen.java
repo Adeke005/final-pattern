@@ -13,10 +13,12 @@ import com.game.towerdefense.managers.WaveManager;
 import com.game.towerdefense.map.Level;
 import com.game.towerdefense.map.MapRenderer;
 import com.game.towerdefense.ui.HUD;
+import com.game.towerdefense.GameApp;
 
 public class GameScreen implements Screen {
     private Level level;
     private MapRenderer mapRenderer;
+    private GameApp game;
 
     private EnemyManager enemyManager;
     private TowerManager towerManager;
@@ -43,6 +45,10 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
     }
 
+    public GameScreen(GameApp game) {
+        this.game = game;
+    }
+
     @Override
     public void render(float delta) {
         handleInput();
@@ -57,11 +63,11 @@ public class GameScreen implements Screen {
         hud.render(batch, base, waveManager, selectedTowerType);
 
         if (base.isDestroyed()) {
-            System.out.println("GAME OVER");
+            game.setScreen(new GameOverScreen(game));
         }
 
         if (waveManager.isGameCompleted()) {
-            System.out.println("YOU WIN");
+            game.setScreen(new WinScreen(game));
         }
 
         if (waveManager.isWaveFinished() && !waveManager.isGameCompleted()) {
