@@ -6,7 +6,6 @@ import com.game.towerdefense.factory.EnemyFactory;
 public class WaveManager {
     private int currentWave = 1;
     private int enemiesSpawned = 0;
-    private int enemiesPerWave = 5;
 
     private float spawnTimer = 0f;
     private float spawnDelay = 1.5f;
@@ -18,7 +17,7 @@ public class WaveManager {
 
         spawnTimer += delta;
 
-        if (spawnTimer >= spawnDelay && enemiesSpawned < enemiesPerWave) {
+        if (spawnTimer >= spawnDelay && enemiesSpawned < getEnemiesPerWave()) {
             String enemyType = getEnemyTypeForWave();
 
             enemyManager.addEnemy(
@@ -29,21 +28,43 @@ public class WaveManager {
             spawnTimer = 0f;
         }
 
-        if (enemiesSpawned >= enemiesPerWave && enemyManager.getEnemies().isEmpty()) {
+        if (enemiesSpawned >= getEnemiesPerWave() && enemyManager.getEnemies().isEmpty()) {
             waveFinished = true;
         }
     }
 
+    private int getEnemiesPerWave() {
+        if (currentWave == 1) return 5;
+        if (currentWave == 2) return 8;
+        if (currentWave == 3) return 10;
+        if (currentWave == 4) return 1;
+        return 0;
+    }
+
     private String getEnemyTypeForWave() {
-        if (currentWave == 1) return "BASIC";
-        if (currentWave == 2) return enemiesSpawned % 2 == 0 ? "BASIC" : "FAST";
-        return enemiesSpawned % 3 == 0 ? "TANK" : "FAST";
+        if (currentWave == 1) {
+            return "BASIC";
+        }
+
+        if (currentWave == 2) {
+            return enemiesSpawned % 2 == 0 ? "BASIC" : "FAST";
+        }
+
+        if (currentWave == 3) {
+            return enemiesSpawned % 3 == 0 ? "TANK" : "FAST";
+        }
+
+        if (currentWave == 4) {
+            return "BOSS";
+        }
+
+        return "BASIC";
     }
 
     public void startNextWave() {
         currentWave++;
         enemiesSpawned = 0;
-        enemiesPerWave += 3;
+        spawnTimer = 0f;
         waveFinished = false;
     }
 
@@ -52,7 +73,7 @@ public class WaveManager {
     }
 
     public boolean isGameCompleted() {
-        return currentWave >= 3 && waveFinished;
+        return currentWave == 4 && waveFinished;
     }
 
     public int getCurrentWave() {

@@ -4,6 +4,7 @@ import com.game.towerdefense.entities.Enemy;
 import com.game.towerdefense.enemies.BasicEnemy;
 import com.game.towerdefense.enemies.FastEnemy;
 import com.game.towerdefense.enemies.TankEnemy;
+import com.game.towerdefense.enemies.BossEnemy;
 
 public class EnemyFactory {
 
@@ -15,6 +16,8 @@ public class EnemyFactory {
                 return new FastEnemy(x, y);
             case "TANK":
                 return new TankEnemy(x, y);
+            case "BOSS":
+                return new BossEnemy(x, y);
             default:
                 return new BasicEnemy(x, y);
         }
