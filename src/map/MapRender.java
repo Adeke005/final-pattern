@@ -14,7 +14,7 @@ public class MapRenderer {
         shapeRenderer = new ShapeRenderer();
     }
 
-    public void render(Level level, List<Enemy> enemies, List<Tower> towers) {
+    public void render(Level level, List<Enemy> enemies, List<Tower> towers, Tower selectedTower) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         // background
@@ -56,6 +56,15 @@ public class MapRenderer {
         // towers
         for (Tower tower : towers) {
             drawTower(tower);
+        }
+
+        if (selectedTower != null) {
+            shapeRenderer.setColor(1f, 1f, 1f, 0.25f);
+            shapeRenderer.circle(
+                    selectedTower.getPosition().x,
+                    selectedTower.getPosition().y,
+                    selectedTower.getRange()
+            );
         }
 
         shapeRenderer.end();

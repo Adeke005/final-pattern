@@ -60,7 +60,12 @@ public class GameScreen implements Screen {
         enemyManager.update(delta, level.getPath().getPoints(), base);
         towerManager.update(delta, enemyManager.getEnemies());
 
-        mapRenderer.render(level, enemyManager.getEnemies(), towerManager.getTowers());
+        mapRenderer.render(
+                level,
+                enemyManager.getEnemies(),
+                towerManager.getTowers(),
+                towerManager.getFirstSelectedTower()
+        );
         hud.render(batch, base, waveManager, selectedTowerType);
 
         if (base.isDestroyed()) {

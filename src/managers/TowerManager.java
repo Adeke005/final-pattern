@@ -80,4 +80,8 @@ public class TowerManager {
     public List<Tower> getTowers() {
         return towers;
     }
+
+    public Tower getFirstSelectedTower() {
+        return firstSelectedTower;
+    }
 }
