@@ -21,6 +21,10 @@ public class TowerManager {
     }
 
     public boolean placeTower(String type, float x, float y, PlayerBase base) {
+        if (isSpotOccupied(x, y)) {
+            return false;
+        }
+
         Tower tower = TowerFactory.createTower(type, x, y);
 
         if (!base.spendGold(tower.getCost())) {
@@ -92,6 +96,15 @@ public class TowerManager {
 
         firstSelectedTower.upgrade();
         return true;
+    }
+
+    public boolean isSpotOccupied(float x, float y) {
+        for (Tower tower : towers) {
+            if (tower.getPosition().dst(x, y) < 35f) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean removeTowerAt(float x, float y) {

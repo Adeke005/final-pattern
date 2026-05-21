@@ -17,6 +17,10 @@ import com.game.towerdefense.map.MapRenderer;
 import com.game.towerdefense.ui.HUD;
 import com.game.towerdefense.ui.GameMessage;
 import com.game.towerdefense.observer.EventManager;
+import com.game.towerdefense.state.GameState;
+import com.game.towerdefense.state.PlayingState;
+import com.game.towerdefense.state.GameOverState;
+import com.game.towerdefense.state.WinState;
 
 public class GameScreen implements Screen {
     private GameApp game;
@@ -33,6 +37,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private GameMessage gameMessage;
     private EventManager eventManager;
+    private GameState currentState;
 
     private String selectedTowerType = "ARROW";
 
@@ -55,6 +60,8 @@ public class GameScreen implements Screen {
         towerManager = new TowerManager();
         waveManager = new WaveManager();
 
+        currentState = new PlayingState();
+
         base = new PlayerBase();
 
         batch = new SpriteBatch();
@@ -65,10 +72,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         handleInput();
 
-        waveManager.update(delta, enemyManager, level.getPath().getSpawnPoint());
-
-        enemyManager.update(delta, level.getPath().getPoints(), base);
-        towerManager.update(delta, enemyManager.getEnemies());
+        currentState.update(this, delta);
 
         mapRenderer.render(
                 level,
@@ -77,9 +81,8 @@ public class GameScreen implements Screen {
                 towerManager.getFirstSelectedTower()
         );
 
-        gameMessage.update(delta);
-
         hud.render(batch, base, waveManager, selectedTowerType, gameMessage);
+
 
         if (base.isDestroyed()) {
             game.setScreen(new GameOverScreen(game));
@@ -151,6 +154,7 @@ public class GameScreen implements Screen {
 
             if (clickedTower != null) {
                 towerManager.selectTower(x, y);
+                gameMessage.show("Tower selected");
                 return;
             }
 
@@ -162,11 +166,44 @@ public class GameScreen implements Screen {
                 if (placed) {
                     gameMessage.show("Tower placed");
                 } else {
-                    gameMessage.show("Not enough gold");
+                    gameMessage.show("Cannot place tower");
                 }
+            } else {
+                gameMessage.show("Place tower only on green spots");
             }
         }
+    }
 
+    public void updateGameplay(float delta) {
+        gameMessage.update(delta);
+
+        waveManager.update(delta, enemyManager, level.getPath().getSpawnPoint());
+
+        enemyManager.update(delta, level.getPath().getPoints(), base);
+        towerManager.update(delta, enemyManager.getEnemies());
+
+        if (base.isDestroyed()) {
+            currentState = new GameOverState();
+            return;
+        }
+
+        if (waveManager.isGameCompleted()) {
+            currentState = new WinState();
+            return;
+        }
+
+        if (waveManager.isWaveFinished() && !waveManager.isGameCompleted()) {
+            eventManager.notifyWaveCompleted(waveManager.getCurrentWave());
+            waveManager.startNextWave();
+        }
+    }
+
+    public void openGameOverScreen() {
+        game.setScreen(new GameOverScreen(game));
+    }
+
+    public void openWinScreen() {
+        game.setScreen(new WinScreen(game));
     }
 
     @Override public void resize(int width, int height) {}
