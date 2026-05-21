@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     private GameMessage gameMessage;
     private EventManager eventManager;
     private GameState currentState;
+    private int currentLevel = 1;
 
     private String selectedTowerType = "ARROW";
 
@@ -48,7 +49,7 @@ public class GameScreen implements Screen {
     @Override
     @Override
     public void show() {
-        level = new Level();
+        level = new Level(currentLevel);
         mapRenderer = new MapRenderer();
 
         eventManager = new EventManager();
@@ -81,7 +82,7 @@ public class GameScreen implements Screen {
                 towerManager.getFirstSelectedTower()
         );
 
-        hud.render(batch, base, waveManager, selectedTowerType, gameMessage);
+        hud.render(batch, base, waveManager, selectedTowerType, gameMessage, level.getLevelNumber());
 
 
         if (base.isDestroyed()) {
@@ -89,7 +90,15 @@ public class GameScreen implements Screen {
         }
 
         if (waveManager.isGameCompleted()) {
-            game.setScreen(new WinScreen(game));
+            if (currentLevel < 3) {
+                currentLevel++;
+                level = new Level(currentLevel);
+                enemyManager.getEnemies().clear();
+                waveManager = new WaveManager();
+                gameMessage.show("Level " + currentLevel);
+            } else {
+                game.setScreen(new WinScreen(game));
+            }
         }
 
         if (waveManager.isWaveFinished() && !waveManager.isGameCompleted()) {
